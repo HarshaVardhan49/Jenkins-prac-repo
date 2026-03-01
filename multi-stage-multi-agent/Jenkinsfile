@@ -20,7 +20,7 @@ pipeline {
     stage('Checkout Code') {
       steps {
         git branch: 'main'
-        url: 'https://github.com/HarshaVardhan49/Jenkins-prac-repo/tree/main/multi-stage-multi-agent'
+        url: 'https://github.com/HarshaVardhan49/Jenkins-prac-repo.git'
       }
     }
     stage('Compile') {
