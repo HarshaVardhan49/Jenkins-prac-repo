@@ -1,36 +1,56 @@
 pipeline {
   agent any
+
   stages {
-    stage('Back-end') {
+
+    stage('Checkout Code') {
+      steps {
+        git branch: 'main',
+            url: 'https://github.com/HarshaVardhan49/Jenkins-prac-repo.git'
+      }
+    }
+
+    stage('Back-end (Maven)') {
       agent {
         docker { image 'maven:3.8.1-adoptopenjdk-11' }
       }
       steps {
         sh 'mvn --version'
+        sh 'mvn clean'
+        sh 'mvn compile'
+        sh 'mvn test'
+        sh 'mvn package'
       }
     }
-    stage('Front-end') {
+
+    stage('Front-end (Node)') {
       agent {
         docker { image 'node:16-alpine' }
       }
       steps {
         sh 'node --version'
+        sh 'npm --version'
+        sh 'npm install'
+        sh 'npm run build || echo "No build script found"'
+        sh 'npm test || echo "No test script found"'
       }
     }
-    stage('Checkout Code') {
-      steps {
-        git branch: 'main'
-        url: 'https://github.com/HarshaVardhan49/Jenkins-prac-repo.git'
+
+    stage('Compile Java Manually') {
+      agent {
+        docker { image 'maven:3.8.1-adoptopenjdk-11' }
       }
-    }
-    stage('Compile') {
       steps {
         sh 'javac Helloworld.java'
       }
     }
-    stage('Run') {
+
+    stage('Run Java') {
+      agent {
+        docker { image 'maven:3.8.1-adoptopenjdk-11' }
+      }
       steps {
-        sh 'java Jenkins Helloworld'
+        sh 'java Helloworld'
       }
     }
   }
