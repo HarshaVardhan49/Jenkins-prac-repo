@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
   stages {
     stage('Back-end') {
       agent {
@@ -15,6 +15,22 @@ pipeline {
       }
       steps {
         sh 'node --version'
+      }
+    }
+    stage('Checkout Code') {
+      steps {
+        git branch: 'main'
+        url: 'https://github.com/HarshaVardhan49/Jenkins-prac-repo/tree/main/multi-stage-multi-agent'
+      }
+    }
+    stage('Compile') {
+      steps {
+        sh 'javac Helloworld.java'
+      }
+    }
+    stage('Run') {
+      steps {
+        sh 'java Jenkins Helloworld'
       }
     }
   }
